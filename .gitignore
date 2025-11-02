@@ -1,0 +1,32 @@
+# Entornos virtuales
+venv/
+env/
+
+# Archivos de configuración sensibles
+.env
+*.key
+*.pem
+
+# Archivos de compilación y binarios
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.exe
+*.spec
+build/
+dist/
+
+# Logs y bases de datos locales
+*.log
+*.sqlite3
+*.db
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# IDEs / editores
+.vscode/
+.idea/
+*.code-workspace
