@@ -3,7 +3,6 @@
 from datetime import date, timedelta
 from typing import Callable, Generator, Optional
 from sqlalchemy.orm import Session
-
 # Importación de Capas Inferiores (Absoluta para evitar errores de ruta)
 from task_project.data_access.repository import TaskRepository
 from task_project.core.models import Task
@@ -65,3 +64,19 @@ class TaskService:
             return new_task
 
     # El método list_tasks vendrá después.
+    def get_pending_tasks(self) -> list[Task]:
+        """
+        Lógica de Transacción: Abre la sesión y pide al Repositorio las tareas pendientes.
+        """
+
+        # El generador de sesión asegura que la conexión se abra y se cierre.
+        # Usa el contexto del generador para obtener una sesión 'db'.
+        for db in self.get_db():
+            # Inicializa el Repositorio con la sesión activa
+            # La importación absoluta o relativa del Repositorio debe estar al inicio del archivo
+            repo = TaskRepository(db)
+
+            # Llama al repositorio y pide explícitamente solo las tareas NO completadas (False)
+            pending_tasks = repo.get_all_tasks(completed=False)
+
+            return pending_tasks

@@ -1,5 +1,4 @@
 # task_project/data_access/repositories.py
-
 from sqlalchemy.orm import Session
 # Importación Absoluta (igual que en main.py para evitar errores de ruta)
 from task_project.core.models import Task

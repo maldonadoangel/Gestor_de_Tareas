@@ -1,5 +1,4 @@
 # task_project/interfaces/cli.py
-
 from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
@@ -99,8 +98,8 @@ class CLIApp:
             if choice == "1":
                 self._add_task_prompt()
             elif choice == "2":
-                self.console.print("Falta implementar la vista de tareas.")
-                Prompt.ask("Presiona Enter para continuar...")
+                # 🚨 CAMBIO AQUÍ
+                self._list_tasks_prompt()
             elif choice == "3":
                 self.running = False
                 self.console.print(
@@ -159,6 +158,53 @@ class CLIApp:
         except Exception as e:
             self.console.print(
                 Panel(f"[bold red]❌ Error al guardar la tarea:[/bold red] {e}"))
+
+        Prompt.ask("Presiona Enter para volver al menú...")
+
+# task_project/interfaces/cli.py (NUEVO MÉTODO)
+
+# ... (dentro de la clase CLIApp)
+
+    def _list_tasks_prompt(self):
+        """Obtiene las tareas pendientes y las muestra en una tabla."""
+        self.console.clear()
+        self.console.print(Panel("[bold cyan]Tareas Pendientes[/bold cyan]"))
+
+        try:
+            # 🚨 Llama al TaskService
+            tasks = self.task_service.get_pending_tasks()
+        except Exception as e:
+            self.console.print(
+                Panel(f"[bold red]❌ Error al obtener tareas:[/bold red] {e}"))
+            Prompt.ask("Presiona Enter para continuar...")
+            return
+
+        if not tasks:
+            self.console.print(
+                Panel("[bold yellow]🎉 ¡No tienes tareas pendientes![/bold yellow]"))
+        else:
+            table = Table(title="Lista de Tareas Pendientes")
+            table.add_column("ID", style="bold cyan", justify="center")
+            table.add_column("Título", style="bold white")
+            table.add_column("Vencimiento", style="yellow")
+            table.add_column("Notificar", style="green")
+            table.add_column("Días", style="magenta", justify="center")
+
+            for task in tasks:
+                # Formateo para la vista
+                due_date_str = task.due_date.strftime(
+                    '%Y-%m-%d') if task.due_date else 'N/A'
+
+                table.add_row(
+                    str(task.id),
+                    task.title,
+                    due_date_str,
+                    task.notification_date.strftime(
+                        '%Y-%m-%d') if task.notification_date else 'N/A',
+                    str(task.notification_days)
+                )
+
+            self.console.print(table)
 
         Prompt.ask("Presiona Enter para volver al menú...")
 
