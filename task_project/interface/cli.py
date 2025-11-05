@@ -1,4 +1,3 @@
-# task_project/interfaces/cli.py
 from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
@@ -8,10 +7,7 @@ from typing import Callable, Generator, Optional
 from sqlalchemy.orm import Session
 from datetime import date
 import sys
-
-# Importación del Servicio de Tareas (Absoluta)
 from task_project.services.task_service import TaskService
-# Importación del Servicio de Autenticación
 from task_project.services.auth_service import AuthService
 
 
@@ -19,13 +15,13 @@ class CLIApp:
     """Clase principal de la Interfaz de Línea de Comandos (CLI)."""
 
     def __init__(self, db_session_generator: Callable[..., Generator[Session, None, None]]):
-        # 🔑 Inyección de Dependencias
+        # Inyección de Dependencias
         custom_theme = Theme(
             {"info": "cyan", "warning": "yellow", "error": "bold red"})
         self.console = Console(theme=custom_theme)
         self.auth_service = AuthService()  # Asumiendo que ya tienes AuthService
 
-        # 🚨 Inicialización del Servicio de Tareas con la dependencia de DB
+        # Inicialización del Servicio de Tareas con la dependencia de DB
         self.task_service = TaskService(db_session_generator)
 
         self.is_logged_in = False
@@ -80,7 +76,8 @@ class CLIApp:
             menu_options = [
                 ("1", "Añadir nueva Tarea"),
                 ("2", "Ver Tareas Pendientes"),
-                ("3", "Salir")
+                ("3", "Actualizar tareas"),
+                ("4", "Salir")
             ]
 
             menu_table = Table(title="Opciones")
@@ -93,7 +90,7 @@ class CLIApp:
             self.console.print(menu_table)
 
             choice = Prompt.ask(
-                "[yellow]Elige una opción[/yellow]", choices=["1", "2", "3"])
+                "[yellow]Elige una opción[/yellow]", choices=["1", "2", "3", "4"])
 
             if choice == "1":
                 self._add_task_prompt()
@@ -101,6 +98,8 @@ class CLIApp:
                 # 🚨 CAMBIO AQUÍ
                 self._list_tasks_prompt()
             elif choice == "3":
+                print("Hola")
+            elif choice == "4":
                 self.running = False
                 self.console.print(
                     Panel("[bold red]👋 ¡Hasta pronto![/bold red]"))
@@ -171,7 +170,7 @@ class CLIApp:
         self.console.print(Panel("[bold cyan]Tareas Pendientes[/bold cyan]"))
 
         try:
-            # 🚨 Llama al TaskService
+            # Llama al TaskService
             tasks = self.task_service.get_pending_tasks()
         except Exception as e:
             self.console.print(
@@ -207,6 +206,9 @@ class CLIApp:
             self.console.print(table)
 
         Prompt.ask("Presiona Enter para volver al menú...")
+
+    def _update_task(self):
+        pass
 
 
 if __name__ == '__main__':

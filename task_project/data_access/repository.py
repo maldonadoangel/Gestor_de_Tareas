@@ -13,7 +13,7 @@ class TaskRepository:
     """
 
     def __init__(self, db: Session):
-        # 🔑 Inyección de Dependencia: Recibe la Sesión de DB activa.
+        #  Inyección de Dependencia: Recibe la Sesión de DB activa.
         # El Repositorio no abre ni cierra la conexión; solo la usa.
         self.db = db
 

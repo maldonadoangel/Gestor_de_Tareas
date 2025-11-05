@@ -17,7 +17,7 @@ class Task(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True, nullable=False)
 
-    # 🚨 CORRECCIÓN: Se agrega la descripción que faltaba en el error.
+    #  CORRECCIÓN: Se agrega la descripción que faltaba en el error.
     description = Column(String, default="")
 
     is_completed = Column(Boolean, default=False)

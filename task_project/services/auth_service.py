@@ -9,7 +9,6 @@ class AuthService:
 
     def authenticate_user(self, username: str, password: str) -> bool:
         """Verifica las credenciales usando la configuración."""
-
         # verifica los datos dentro de settings
         if username == TASK_DEFAULT_USER and password == TASK_DEFAULT_PASSWORD:
             return True
